@@ -1,0 +1,31 @@
+// Authorization token that must have been created previously. See : https://developer.spotify.com/documentation/web-api/concepts/authorization
+const token = 'BQCEAnDHVxp_ArKCKE6pX2Eh-pJK89A7DyDm0rarZCfXgPQu7g6JWLKoFMspBBr9J4Tp7nLudcbFGrW4-zQ01Jt2gsZRSCPDcCNFlakxylDIYYGrYnUBLRGcZW8K7JKIpZ-kiSgHKztcKzhbqRKi4NF0VEoEgU-712jPskD79TewtzXt7ns966ot0UjkIRtbAYHhU1DWyK0oQQqglkrVO4ShFMQ1btUR9ZT90Z7izj8M6l626ii2xszcWVy3C8m9TkYtwQ';
+async function fetchWebApi(endpoint, method, body) {
+  const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    method,
+    body:JSON.stringify(body)
+  });
+  return await res.json();
+}
+
+const topTracksIds = [
+  '7ygpwy2qP3NbrxVkHvUhXY','12dU3vAh6AFoJkisorfoUl','5vt5Got82cYP5kqjzBwai0','6dgkHkbtXg4mGwRPJiE1LV','2KraLG62JBty0ccSnLjA0z'
+];
+
+async function getRecommendations(){
+  // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-recommendations
+  return (await fetchWebApi(
+    `v1/recommendations?limit=5&seed_tracks=${topTracksIds.join(',')}`, 'GET'
+  )).tracks;
+}
+
+const recommendedTracks = await getRecommendations();
+console.log(
+  recommendedTracks.map(
+    ({name, artists}) =>
+      `${name} by ${artists.map(artist => artist.name).join(', ')}`
+  )
+);
