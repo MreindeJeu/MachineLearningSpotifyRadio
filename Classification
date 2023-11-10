@@ -1,0 +1,27 @@
+#importing libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy
+import sys
+import os
+import pickle
+import librosa
+import librosa.display
+from IPython.display import Audio
+from sklearn.preprocessing import LabelEncoder
+import tensorflow as tf
+from tensorflow import keras
+
+# read the csv file
+df = pd.read_csv(r"C:\Users\stefo\Downloads\features_30_sec.csv.zip")
+df.head()
+
+#drop kolom filename
+df = df.drop(labels= "filename",axis=1)
+
+
+# plot raw wave files
+plt.figure(figsize=(12, 4))
+librosa.display.waveplot(data)
+plt.show()
