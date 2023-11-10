@@ -1,0 +1,46 @@
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+from sklearn.neighbors import NearestNeighbors
+
+# Voorbeelddata met sectielabels
+x = np.random.rand(1000)
+y = np.random.rand(1000)
+z = np.random.rand(1000)
+section_labels = np.random.choice([0, 1, 2], size=1000)  # 3 secties: 0, 1, 2
+
+# Drie willekeurige punten toe als centrum
+random_centers = np.random.rand(3, 3)
+
+# KNN voor dichtstbijzijnde burem
+knn = NearestNeighbors(n_neighbors=100)
+data_points = np.column_stack((x, y, z))
+knn.fit(data_points)
+
+# Nieuwe secties dichtstbijzijnde buren van elk centrum
+new_section_labels = np.full(data_points.shape[0], fill_value=3)
+
+for label, random_center in enumerate(random_centers):
+    distances, indices = knn.kneighbors(random_center.reshape(1, -1))
+    new_section_labels[indices.flatten()] = label + 4
+
+# Secties van sectielabels
+section_labels = np.concatenate((section_labels, new_section_labels))
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+scatter = ax.scatter(x, y, z, c=section_labels[:1000], marker='o', cmap='viridis')  # 'viridis' is slechts een voorbeeldkleurenkaart
+
+# Markeren van de willekeurige centra van nieuwe secties
+ax.scatter(random_centers[:, 0], random_centers[:, 1], random_centers[:, 2], c='red', marker='x', s=100, label='Centrum van nieuwe sectie')
+
+ax.set_xlabel('X-as')
+ax.set_ylabel('Y-as')
+ax.set_zlabel('Z-as')
+
+# legenda
+legend = ax.legend(*scatter.legend_elements(), title='Secties')
+ax.add_artist(legend)
+
+#plotten
+plt.show()
