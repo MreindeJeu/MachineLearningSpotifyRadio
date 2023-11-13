@@ -17,6 +17,13 @@ from tensorflow import keras
 df = pd.read_csv(r"C:\Users\stefo\Downloads\features_30_sec.csv.zip")
 df.head()
 
+#understanding audio files
+    audio_recording= r"C:\Users\stefo\Downloads\country.00005.wav.zip"
+    data , sr = librosa.load(audio_recording)
+    print(type(data), type(sr))
+    
+    librosa.load(audio_recording, sr=45600)
+
 #drop kolom filename
 df = df.drop(labels= "filename",axis=1)
 
